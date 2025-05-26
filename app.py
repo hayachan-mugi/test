@@ -5,8 +5,11 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
 from dotenv import load_dotenv
 import json
-from linebot.v3.messaging import MessagingApiClient
+# from linebot.v3.messaging import MessagingApiClient
+# from linebot.v3.webhook import WebhookHandler
+from linebot.v3.messaging.messaging_api_client import MessagingApiClient
 from linebot.v3.webhook import WebhookHandler
+
 
 
 
