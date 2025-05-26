@@ -100,6 +100,7 @@ from linebot.v3.webhooks import (
 	FollowEvent, MessageEvent, PostbackEvent, TextMessageContent
 )
 import os
+import chat
 
 
 LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
@@ -152,7 +153,7 @@ def handle_message(event):
 	## オウム返し
 	line_bot_api.reply_message(ReplyMessageRequest(
 		replyToken=event.reply_token,
-		messages=[TextMessage(text=reply)]
+		messages=[TextMessage(text=chat.chat_with_gpt(received_message))]
 	))
 
 ## 起動確認用ウェブサイトのトップページ
