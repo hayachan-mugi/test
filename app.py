@@ -1,14 +1,21 @@
-from flask import Flask, request, abort
-# from linebot import LineBotApi, WebhookHandler
-from linebot.exceptions import InvalidSignatureError
-from linebot.models import MessageEvent, TextMessage, TextSendMessage
-import os
-from dotenv import load_dotenv
-import json
-# from linebot.v3.messaging import MessagingApiClient
+# from flask import Flask, request, abort
+# # from linebot import LineBotApi, WebhookHandler
+# from linebot.exceptions import InvalidSignatureError
+# from linebot.models import MessageEvent, TextMessage, TextSendMessage
+# import os
+# from dotenv import load_dotenv
+# import json
+# # from linebot.v3.messaging import MessagingApiClient
+# # from linebot.v3.webhook import WebhookHandler
+# from linebot.v3.messaging.messaging_api_client import MessagingApiClient
 # from linebot.v3.webhook import WebhookHandler
-from linebot.v3.messaging.messaging_api_client import MessagingApiClient
+
+import os
+from flask import Flask, request, abort
+from linebot.v3.messaging import MessagingApiClient, Configuration, ApiClient
 from linebot.v3.webhook import WebhookHandler
+from linebot.v3.webhooks import MessageEvent, TextMessageContent
+from linebot.v3.messaging.models import TextMessage
 
 
 
