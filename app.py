@@ -59,6 +59,26 @@ def webhook():
 
     return "OK"
 
+#ルーティングの設定、POSTリクエストが来たらcallback関数を返す
+@app.route("/callback", methods=['POST'])
+def callback():
+    # リクエストヘッダーからアクセス情報の検証のための値を取得
+    signature = request.headers['X-Line-Signature']
+
+    body = request.get_data(as_text=True)
+    app.logger.info("Request body: " + body)
+    # アクセス情報を検証し、成功であればhandleの関数を呼び出す
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+        abort(400)
+
+    return 'OK'
+
+# #メッセージを受け取った後にどんな処理を行うかを記述
+# @handler.add(MessageEvent, message=TextMessage)
+# def response_message(event):
+
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     # 入力テキストをそのまま返す
