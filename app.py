@@ -23,10 +23,8 @@ from linebot.v3.messaging import (
     MessagingApi,
 )
 configuration = Configuration(access_token=CHANNEL_ACCESS_TOKEN)
- with ApiClient(configuration) as api_client:
-        line_bot_api = MessagingApi(api_client)
-        ## ここから下はそれぞれ
-
+with ApiClient(configuration) as api_client:
+    line_bot_api = MessagingApi(api_client)
 
 
 
