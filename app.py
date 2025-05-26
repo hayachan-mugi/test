@@ -1,10 +1,14 @@
 from flask import Flask, request, abort
-from linebot import LineBotApi, WebhookHandler
+# from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import os
 from dotenv import load_dotenv
 import json
+from linebot.v3.messaging import MessagingApiClient
+from linebot.v3.webhook import WebhookHandler
+
+
 
 load_dotenv()
 
@@ -18,8 +22,10 @@ app = Flask(__name__)
 LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
 
-line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
+line_bot_api = MessagingApiClient(channel_access_token=LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
+# line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
+# handler = WebhookHandler(LINE_CHANNEL_SECRET)
 
 @app.route("/")
 def hello():
@@ -47,7 +53,12 @@ def handle_message(event):
     )
 
 if __name__ == "__main__":
-    app.run()
+    port = int(os.environ.get("PORT", 5000))  # RenderでPORTが環境変数で渡される
+    app.run(host="0.0.0.0", port=port)
+
+# if __name__ == "__main__":
+#     app.run()
+    
 
 
 
