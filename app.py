@@ -12,10 +12,20 @@
 
 import os
 from flask import Flask, request, abort
-from linebot.v3.messaging import MessagingApiClient, Configuration, ApiClient
+# from linebot.v3.messaging import MessagingApiClient, Configuration, ApiClient
 from linebot.v3.webhook import WebhookHandler
 from linebot.v3.webhooks import MessageEvent, TextMessageContent
 from linebot.v3.messaging.models import TextMessage
+
+from linebot.v3.messaging import (
+    Configuration,
+    ApiClient,
+    MessagingApi,
+)
+configuration = Configuration(access_token=CHANNEL_ACCESS_TOKEN)
+ with ApiClient(configuration) as api_client:
+        line_bot_api = MessagingApi(api_client)
+        ## ここから下はそれぞれ
 
 
 
@@ -32,7 +42,7 @@ app = Flask(__name__)
 LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
 
-line_bot_api = MessagingApiClient(channel_access_token=LINE_CHANNEL_ACCESS_TOKEN)
+# line_bot_api = MessagingApiClient(channel_access_token=LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
 # line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 # handler = WebhookHandler(LINE_CHANNEL_SECRET)
