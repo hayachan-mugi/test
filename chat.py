@@ -1,18 +1,8 @@
 import openai
 import os
-import json
-
-# OpenAIのAPIキーを設定
-ABS_PATH = os.path.dirname(os.path.abspath(__file__))
-with open(ABS_PATH+'/conf.json', 'r') as f:
-    CONF_DATA = json.load(f)
 
 #chatgptへのアクセス情報を入力
-openai.api_key = CONF_DATA["CHATGPT_TOKEN"]
-
-
-# 会話履歴を保持するためのリスト
-conversation_history = []
+openai.api_key = os.getenv("OPENAI_TOKEN")
 
 
 def chat_with_gpt(prompt):
