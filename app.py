@@ -10,13 +10,13 @@ load_dotenv()
 
 app = Flask(__name__)
 
-ABS_PATH = os.path.dirname(os.path.abspath(__file__))
-with open(ABS_PATH+'/conf.json', 'r') as f:
-    CONF_DATA = json.load(f)
+# ABS_PATH = os.path.dirname(os.path.abspath(__file__))
+# with open(ABS_PATH+'/conf.json', 'r') as f:
+#     CONF_DATA = json.load(f)
 
 # 環境変数からトークンとシークレットを取得
-LINE_CHANNEL_ACCESS_TOKEN = CONF_DATA["CHANNEL_ACCESS_TOKEN"]
-LINE_CHANNEL_SECRET = CONF_DATA["CHANNEL_SECRET"]
+LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
+LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
 
 line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
