@@ -1,96 +1,89 @@
-# from flask import Flask, request, abort
-# # from linebot import LineBotApi, WebhookHandler
-# from linebot.exceptions import InvalidSignatureError
-# from linebot.models import MessageEvent, TextMessage, TextSendMessage
-# import os
-# from dotenv import load_dotenv
-# import json
-# # from linebot.v3.messaging import MessagingApiClient
-# # from linebot.v3.webhook import WebhookHandler
-# from linebot.v3.messaging.messaging_api_client import MessagingApiClient
-# from linebot.v3.webhook import WebhookHandler
-
 import os
 from flask import Flask, request, abort
-# from linebot.v3.messaging import MessagingApiClient, Configuration, ApiClient
 from linebot.v3.webhook import WebhookHandler
 from linebot.v3.webhooks import MessageEvent, TextMessageContent
 from linebot.v3.messaging.models import TextMessage
-
 from linebot.v3.messaging import (
     Configuration,
     ApiClient,
     MessagingApi,
 )
 
-# load_dotenv()
 
 app = Flask(__name__)
 
-# ABS_PATH = os.path.dirname(os.path.abspath(__file__))
-# with open(ABS_PATH+'/conf.json', 'r') as f:
-#     CONF_DATA = json.load(f)
 
 # 環境変数からトークンとシークレットを取得
 LINE_CHANNEL_SECRET = os.getenv("LINE_CHANNEL_SECRET")
 LINE_CHANNEL_ACCESS_TOKEN = os.getenv("LINE_CHANNEL_ACCESS_TOKEN")
 
-# line_bot_api = MessagingApiClient(channel_access_token=LINE_CHANNEL_ACCESS_TOKEN)
 configuration = Configuration(access_token=LINE_CHANNEL_ACCESS_TOKEN)
 with ApiClient(configuration) as api_client:
     line_bot_api = MessagingApi(api_client)
 handler = WebhookHandler(LINE_CHANNEL_SECRET)
-# line_bot_api = LineBotApi(LINE_CHANNEL_ACCESS_TOKEN)
-# handler = WebhookHandler(LINE_CHANNEL_SECRET)
+
 
 @app.route("/")
 def hello():
     return "Hello, this is a LINE Echo Bot!"
 
-@app.route("/webhook", methods=["POST"])
-def webhook():
-    signature = request.headers["X-Line-Signature"]
-    body = request.get_data(as_text=True)
+# @app.route("/webhook", methods=["POST"])
+# def webhook():
+#     signature = request.headers["X-Line-Signature"]
+#     body = request.get_data(as_text=True)
 
-    try:
-        handler.handle(body, signature)
-    except InvalidSignatureError:
-        abort(400)
+#     try:
+#         handler.handle(body, signature)
+#     except InvalidSignatureError:
+#         abort(400)
 
-    return "OK"
+#     return "OK"
 
-#ルーティングの設定、POSTリクエストが来たらcallback関数を返す
+
 @app.route("/callback", methods=['POST'])
 def callback():
-    # リクエストヘッダーからアクセス情報の検証のための値を取得
-    signature = request.headers['X-Line-Signature']
-
+    signature = request.headers.get('X-Line-Signature', '')
     body = request.get_data(as_text=True)
-    app.logger.info("Request body: " + body)
-    # アクセス情報を検証し、成功であればhandleの関数を呼び出す
+    app.logger.info(f"Received body: {body}")
+    app.logger.info(f"Signature: {signature}")
+
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
+        app.logger.error("Invalid signature error")
         abort(400)
+    except Exception as e:
+        app.logger.error(f"Error handling webhook: {e}")
+        abort(500)
 
     return 'OK'
 
-# #メッセージを受け取った後にどんな処理を行うかを記述
-# @handler.add(MessageEvent, message=TextMessage)
-# def response_message(event):
+
 
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     # 入力テキストをそのまま返す
+    app.logger.info(f"handle_message called with message: {event.message.text}")
     reply_text = event.message.text
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=reply_text)
     )
 
+
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))  # RenderでPORTが環境変数で渡される
     app.run(host="0.0.0.0", port=port)
+
+
+
+
+
+
+
+
+
+
 
 # if __name__ == "__main__":
 #     app.run()
