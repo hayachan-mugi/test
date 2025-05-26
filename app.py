@@ -23,7 +23,7 @@ from linebot.v3.messaging import (
     MessagingApi,
 )
 
-load_dotenv()
+# load_dotenv()
 
 app = Flask(__name__)
 
